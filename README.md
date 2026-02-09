@@ -1,6 +1,6 @@
-# 🎣 AI-Powered Phishing Email Detector
+# AI-Powered Phishing Email Detector
 
-> Real-time phishing email detection using Machine Learning with high accuracy and modern web interface.
+> Real-time phishing email detection using Machine Learning with high accuracy.
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
 [![Flask](https://img.shields.io/badge/Flask-2.3-green.svg)](https://flask.palletsprojects.com/)
