@@ -9,7 +9,7 @@
 ## ✨ Features
 
 - 🤖 **4 ML Algorithms** - Naive Bayes, Random Forest, SVM, Logistic Regression
-- 🎯 **100% Test Accuracy** - Perfect classification on test samples
+- 🎯 **92,4% Test Accuracy** - Good classification on test samples
 - 🌐 **Beautiful Web UI** - Modern, responsive interface
 - 🔌 **REST API** - 6 endpoints for easy integration
 - 📊 **Detailed Analysis** - Feature extraction and confidence scoring
@@ -71,10 +71,6 @@ phishing-email-detector/
 ## 🛠️ Tech Stack
 
 - Python 3.8+ • Scikit-learn • Flask • Pandas • NLTK
-
-## 📝 License
-
-MIT License
 
 ## 👨‍💻 Author
 
