@@ -78,7 +78,7 @@ MIT License
 
 ## 👨‍💻 Author
 
-GitHub: [@yourusername](https://github.com/Ryleyyy1)
+GitHub: [@Ryleyyy1](https://github.com/Ryleyyy1)
 
 ---
 
