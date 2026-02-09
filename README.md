@@ -1,7 +1,6 @@
 # AI-Powered Phishing Email Detector
 
-> Anggie Wiyoto --Web Pentesting
-> Real-time phishing email detection using Machine Learning with high accuracy.
+> Real-time phishing email detection using Machine Learning with high accuracy -- Anggie Wiyoto
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
 [![Flask](https://img.shields.io/badge/Flask-2.3-green.svg)](https://flask.palletsprojects.com/)
