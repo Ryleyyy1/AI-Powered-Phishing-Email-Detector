@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - Phishing Email Detector</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .card h3 {
+            color: #333;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .endpoint {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .method-post {
+            background: #51cf66;
+            color: white;
+        }
+
+        .method-get {
+            background: #4dabf7;
+            color: white;
+        }
+
+        .endpoint-url {
+            font-family: 'Courier New', monospace;
+            color: #333;
+            font-weight: 600;
+        }
+
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #e83e8c;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #f8f8f2;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #51cf66;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .btn-back {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.3s;
+        }
+
+        .btn-back:hover {
+            transform: translateY(-2px);
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .tech-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .tech-item .icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 API Documentation</h1>
+            <p>Phishing Email Detector REST API</p>
+        </div>
+
+        <div class="card">
+            <h2>🚀 Quick Start</h2>
+            <p>The Phishing Email Detector provides a RESTful API for analyzing emails and detecting phishing attempts using machine learning.</p>
+            
+            <h3>Base URL</h3>
+            <pre><code>http://localhost:5000</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>🔌 API Endpoints</h2>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method method-post">POST</span>
+                    <span class="endpoint-url">/api/predict</span>
+                </div>
+                <p><strong>Description:</strong> Analyze a single email for phishing detection</p>
+                
+                <h4>Request Body:</h4>
+                <pre><code>{
+    "email_text": "Your email content here"
+}</code></pre>
+
+                <h4>Response:</h4>
+                <pre><code>{
+    "success": true,
+    "prediction": {
+        "is_phishing": true,
+        "label": "Phishing",
+        "confidence": 0.8523,
+        "confidence_percent": 85.23
+    },
+    "analysis": {
+        "prediction": {...},
+        "features": {
+            "length": 156,
+            "num_urls": 1,
+            "num_emails": 1,
+            "num_exclamation": 2,
+            "num_caps_words": 3,
+            "has_urgency": true
+        }
+    }
+}</code></pre>
+
+                <h4>cURL Example:</h4>
+                <pre><code>curl -X POST http://localhost:5000/api/predict \
+  -H "Content-Type: application/json" \
+  -d '{"email_text": "URGENT! Click here to verify your account"}'</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method method-post">POST</span>
+                    <span class="endpoint-url">/api/predict/batch</span>
+                </div>
+                <p><strong>Description:</strong> Analyze multiple emails in one request</p>
+                
+                <h4>Request Body:</h4>
+                <pre><code>{
+    "emails": [
+        "First email content",
+        "Second email content",
+        "Third email content"
+    ]
+}</code></pre>
+
+                <h4>Response:</h4>
+                <pre><code>{
+    "success": true,
+    "count": 3,
+    "results": [
+        {
+            "email": "First email content...",
+            "prediction": {
+                "is_phishing": true,
+                "label": "Phishing",
+                "confidence": 0.85,
+                "confidence_percent": 85.0
+            }
+        },
+        ...
+    ]
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method method-get">GET</span>
+                    <span class="endpoint-url">/api/health</span>
+                </div>
+                <p><strong>Description:</strong> Check API health status</p>
+                
+                <h4>Response:</h4>
+                <pre><code>{
+    "status": "healthy",
+    "model_loaded": true
+}</code></pre>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>💻 Python Example</h2>
+            <pre><code>import requests
+
+# Single email prediction
+url = "http://localhost:5000/api/predict"
+data = {
+    "email_text": "URGENT! Your account has been suspended!"
+}
+
+response = requests.post(url, json=data)
+result = response.json()
+
+if result['success']:
+    prediction = result['prediction']
+    print(f"Is Phishing: {prediction['is_phishing']}")
+    print(f"Confidence: {prediction['confidence_percent']:.2f}%")
+else:
+    print(f"Error: {result['error']}")
+
+
+# Batch prediction
+batch_url = "http://localhost:5000/api/predict/batch"
+batch_data = {
+    "emails": [
+        "Email 1 content",
+        "Email 2 content"
+    ]
+}
+
+batch_response = requests.post(batch_url, json=batch_data)
+batch_result = batch_response.json()
+
+for item in batch_result['results']:
+    print(f"Email: {item['email']}")
+    print(f"Prediction: {item['prediction']['label']}")
+</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>🎯 Features Analyzed</h2>
+            <ul class="feature-list">
+                <li><strong>Email Length:</strong> Total character count</li>
+                <li><strong>URL Count:</strong> Number of links in the email</li>
+                <li><strong>Email Addresses:</strong> Number of email addresses found</li>
+                <li><strong>Exclamation Marks:</strong> Count of ! characters</li>
+                <li><strong>ALL CAPS Words:</strong> Number of words in uppercase</li>
+                <li><strong>Urgency Keywords:</strong> Detection of urgent/suspicious words</li>
+                <li><strong>Text Patterns:</strong> TF-IDF vectorization of email content</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>🛠️ Tech Stack</h2>
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <div class="icon">🐍</div>
+                    <strong>Python 3.8+</strong>
+                    <p>Core Language</p>
+                </div>
+                <div class="tech-item">
+                    <div class="icon">🌶️</div>
+                    <strong>Flask</strong>
+                    <p>Web Framework</p>
+                </div>
+                <div class="tech-item">
+                    <div class="icon">🤖</div>
+                    <strong>Scikit-learn</strong>
+                    <p>Machine Learning</p>
+                </div>
+                <div class="tech-item">
+                    <div class="icon">📊</div>
+                    <strong>TF-IDF</strong>
+                    <p>Text Vectorization</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>⚠️ Error Responses</h2>
+            
+            <h3>400 Bad Request</h3>
+            <pre><code>{
+    "success": false,
+    "error": "Missing email_text in request"
+}</code></pre>
+
+            <h3>500 Internal Server Error</h3>
+            <pre><code>{
+    "success": false,
+    "error": "Error message here"
+}</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>📝 Notes</h2>
+            <ul class="feature-list">
+                <li>All requests should use <code>Content-Type: application/json</code></li>
+                <li>Maximum request size: 16MB</li>
+                <li>Empty email text will return 400 error</li>
+                <li>Model must be trained before using the API</li>
+                <li>Cross-origin requests (CORS) are enabled by default</li>
+            </ul>
+        </div>
+
+        <div class="card" style="text-align: center;">
+            <a href="/" class="btn-back">← Back to Detector</a>
+        </div>
+    </div>
+</body>
+</html>

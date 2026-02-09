@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎣 Phishing Email Detector</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .status-badge.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-badge.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 1.1em;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .result.phishing {
+            background: #f8d7da;
+            border: 2px solid #f5c6cb;
+        }
+        
+        .result.legitimate {
+            background: #d4edda;
+            border: 2px solid #c3e6cb;
+        }
+        
+        .result h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .result.phishing h3 {
+            color: #721c24;
+        }
+        
+        .result.legitimate h3 {
+            color: #155724;
+        }
+        
+        .confidence-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            transition: width 0.5s ease;
+        }
+        
+        .features {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 8px;
+        }
+        
+        .features h4 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .feature-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .examples {
+            margin-top: 20px;
+        }
+        
+        .example-btn {
+            padding: 10px 15px;
+            margin: 5px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        .example-btn:hover {
+            background: #e9ecef;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+            opacity: 0.8;
+        }
+        
+        .api-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+        
+        .api-info h4 {
+            margin-bottom: 10px;
+        }
+        
+        .api-info code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎣 Phishing Email Detector</h1>
+            <p>AI-Powered Email Security Analysis</p>
+        </div>
+        
+        <div class="card">
+            {% if model_loaded %}
+            <span class="status-badge success">✅ Model Loaded</span>
+            {% else %}
+            <span class="status-badge error">❌ Model Not Loaded - Please train the model first</span>
+            {% endif %}
+            
+            <div class="input-group">
+                <label for="emailText">📧 Enter Email Content:</label>
+                <textarea 
+                    id="emailText" 
+                    placeholder="Paste your email content here to check if it's a phishing attempt..."
+                    {% if not model_loaded %}disabled{% endif %}
+                ></textarea>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn-primary" onclick="analyzeEmail()" {% if not model_loaded %}disabled{% endif %}>
+                    🔍 Analyze Email
+                </button>
+                <button class="btn-secondary" onclick="clearAll()">
+                    🗑️ Clear
+                </button>
+            </div>
+            
+            <div class="examples">
+                <strong>Quick Test Examples:</strong><br>
+                <button class="example-btn" onclick="loadExample('phishing')">📛 Phishing Example</button>
+                <button class="example-btn" onclick="loadExample('legitimate')">✅ Legitimate Example</button>
+            </div>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyzing email...</p>
+            </div>
+            
+            <div class="result" id="result">
+                <h3 id="resultTitle"></h3>
+                <p id="resultDescription"></p>
+                
+                <div class="confidence-bar">
+                    <div class="confidence-fill" id="confidenceBar">
+                        <span id="confidenceText"></span>
+                    </div>
+                </div>
+                
+                <div class="features" id="features" style="display: none;">
+                    <h4>📊 Email Features:</h4>
+                    <div id="featuresList"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card api-info">
+            <h4>🔌 API Documentation</h4>
+            <p><strong>Endpoint:</strong> <code>POST /predict</code></p>
+            <p><strong>Request:</strong> <code>{"email_text": "your email content"}</code></p>
+            <p><strong>Response:</strong> <code>{"success": true, "prediction": {...}}</code></p>
+            <p style="margin-top: 10px;"><strong>Other endpoints:</strong></p>
+            <p>• <code>POST /analyze</code> - Detailed analysis with features</p>
+            <p>• <code>POST /batch</code> - Batch prediction</p>
+            <p>• <code>GET /health</code> - Health check</p>
+        </div>
+        
+        <div class="footer">
+            <p>🛡️ AI-Powered Phishing Email Detector</p>
+            <p>Built with Machine Learning • Flask • Python</p>
+        </div>
+    </div>
+    
+    <script>
+        const examples = {
+            phishing: "URGENT! Your account has been suspended.\n\nDear Customer,\n\nWe have detected suspicious login attempts. Your account will be permanently closed within 24 hours if you don't verify immediately.\n\nClick here: http://fake-bank-verify.com/account\n\nIf you don't act now, you will lose access to all your funds!\n\nContact: support@fake-bank.com",
+            
+            legitimate: "Order Confirmation - Thank You!\n\nHello,\n\nThank you for your order #78945. We're pleased to confirm that your order has been processed successfully.\n\nOrder Details:\n- Order Number: #78945\n- Total: $49.99\n- Estimated Delivery: 3-5 business days\n\nYou can track your shipment by logging into your account.\n\nBest regards,\nCustomer Service Team"
+        };
+        
+        function loadExample(type) {
+            document.getElementById('emailText').value = examples[type];
+        }
+        
+        function clearAll() {
+            document.getElementById('emailText').value = '';
+            document.getElementById('result').classList.remove('show');
+        }
+        
+        async function analyzeEmail() {
+            const emailText = document.getElementById('emailText').value.trim();
+            
+            if (!emailText) {
+                alert('Please enter email content');
+                return;
+            }
+            
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('result').classList.remove('show');
+            
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ email_text: emailText })
+                });
+                
+                const data = await response.json();
+                document.getElementById('loading').classList.remove('show');
+                
+                if (data.success) {
+                    displayResult(data.analysis);
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                document.getElementById('loading').classList.remove('show');
+                alert('Error: ' + error.message);
+            }
+        }
+        
+        function displayResult(analysis) {
+            const result = document.getElementById('result');
+            const prediction = analysis.prediction;
+            const features = analysis.features;
+            
+            result.className = 'result show ' + (prediction.is_phishing ? 'phishing' : 'legitimate');
+            
+            const title = document.getElementById('resultTitle');
+            const description = document.getElementById('resultDescription');
+            
+            if (prediction.is_phishing) {
+                title.innerHTML = '🚨 WARNING: Phishing Email Detected!';
+                description.innerHTML = 'This email appears to be a <strong>phishing attempt</strong>. Do not click links or provide personal information.';
+            } else {
+                title.innerHTML = '✅ Email Appears Legitimate';
+                description.innerHTML = 'This email appears to be <strong>legitimate</strong>. Always exercise caution with sensitive information.';
+            }
+            
+            const confidenceBar = document.getElementById('confidenceBar');
+            const confidenceText = document.getElementById('confidenceText');
+            confidenceBar.style.width = prediction.confidence_percent + '%';
+            confidenceText.textContent = prediction.confidence_percent.toFixed(1) + '% Confidence';
+            
+            const featuresDiv = document.getElementById('features');
+            const featuresList = document.getElementById('featuresList');
+            featuresDiv.style.display = 'block';
+            
+            featuresList.innerHTML = '';
+            for (const [key, value] of Object.entries(features)) {
+                const item = document.createElement('div');
+                item.className = 'feature-item';
+                item.innerHTML = `<span>${formatFeatureName(key)}</span><strong>${value}</strong>`;
+                featuresList.appendChild(item);
+            }
+        }
+        
+        function formatFeatureName(name) {
+            return name.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        }
+    </script>
+</body>
+</html>
